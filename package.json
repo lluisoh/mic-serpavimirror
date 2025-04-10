@@ -1,0 +1,33 @@
+{
+  "name": "mic-serpavi",
+  "version": "1.0.0",
+  "description": "Microservice that replicates SERPAVI price range calculator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@turf/turf": "^7.2.0",
+    "axios": "^1.8.4",
+    "better-sqlite3": "^11.9.1",
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "geojson": "^0.5.0",
+    "sqlite3": "^5.1.7",
+    "xlsx": "^0.18.5",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^5.0.1",
+    "@types/geojson": "^7946.0.16",
+    "@types/node": "^22.14.0",
+    "@types/sqlite3": "^3.1.11",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
