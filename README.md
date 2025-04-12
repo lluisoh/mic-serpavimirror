@@ -1,6 +1,6 @@
 # SERPAVI Mirror Microservice
 
-This microservice exposes a REST API for querying rental price reference indexes based on Spanish census sections. It mirrors the logic and methodology used by the Sistema Estatal de Referencia de Precios de Alquiler de Vivienda ([SERPAVI](https://serpavi.mivau.gob.es/))  to calculate reference rental prices. Since their API is not public, I´ve decided to create my own with the procedure explained in their (methodology)[https://www.mivau.gob.es/recursos_mfom/comodin/recursos/2025-03-03_metodologia_serpavi.pdf] so it can be used freely by third parties
+This microservice exposes a REST API for querying rental price reference indexes based on Spanish census sections. It mirrors the logic and methodology used by the Sistema Estatal de Referencia de Precios de Alquiler de Vivienda ([SERPAVI](https://serpavi.mivau.gob.es/))  to calculate reference rental prices. Since their API is not public, I´ve decided to create my own with the procedure explained in their [methodology](https://www.mivau.gob.es/recursos_mfom/comodin/recursos/2025-03-03_metodologia_serpavi.pdf) so it can be used freely by third parties
 
 ## Features
 
@@ -22,7 +22,7 @@ This microservice exposes a REST API for querying rental price reference indexes
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-user/mic-serpavimirror.git
+git clone https://github.com/lluisoh/mic-serpavimirror.git
 cd mic-serpavimirror/code
 ```
 
