@@ -18,17 +18,19 @@
     "body-parser": "^2.2.0",
     "express": "^5.1.0",
     "geojson": "^0.5.0",
-    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
     "xlsx": "^0.18.5",
-    "xml2js": "^0.6.2"
+    "xml2js": "^0.6.2",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.1",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^22.14.0",
-    "@types/sqlite3": "^3.1.11",
     "@types/supertest": "^6.0.3",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/yamljs": "^0.2.34",
     "@vitest/coverage-v8": "^3.1.1",
     "nodemon": "^3.1.9",
     "supertest": "^7.1.0",

@@ -1,0 +1,503 @@
+openapi: 3.0.4
+info:
+  title: Serpavi microservice API
+  description: API documentation for the Microservice Serpavi project, which mirrors the calculations made by the SERPAVI form to get a price range for an apartment with certain characteristics
+  contact:
+    name: Lluís Pons
+    email: luisponshernandez@gmail.com
+  version: 1.0.0
+  license:
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.html
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+tags:
+  - name: census-section
+    description: Get census section data
+    externalDocs:
+      description: Find out more (INE)
+      url: https://www.ine.es/ss/Satellite?c=Page&p=1259952026632&pagename=ProductosYServicios%2FPYSLayout&cid=1259952026632&L=0#
+  - name: price
+    description: Price range calculations
+    externalDocs:
+      description: Find out more (SERPAVI)
+      url: https://www.mivau.gob.es/vivienda/alquila-bien-es-tu-derecho/serpavi
+paths:
+  /census-section/by-address:
+    get:
+      tags:
+        - census-section
+      summary: Finds Census Section by address.
+      description: Finds the Census section for a specific address
+      operationId: getCensusSectionByAddress
+      parameters:
+        - name: street
+          in: query
+          description: Street name
+          required: true
+          schema:
+            type: string
+            example: Avinguda Gran Via
+        - name: number
+          in: query
+          description: Door number
+          required: true
+          schema:
+            type: number
+            example: 120
+        - name: postalCode
+          in: query
+          description: Postal code
+          required: true
+          schema:
+            type: string
+            example: "08001"
+        - name: municipality
+          in: query
+          required: true
+          schema:
+            type: string
+            example: Barcelona
+        - name: province
+          in: query
+          required: true
+          schema:
+            type: string
+            example: Barcelona
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CensusSection'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        default:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+  /census-section/by-coords:
+    get:
+      tags:
+        - census-section
+      summary: Finds Census Section by coordinates.
+      description: Finds a census section for a given set of coordinates
+      operationId: getCensusSectionByCoords
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude
+          required: true
+          schema:
+            type: number
+            example: 42.41233311966451
+        - name: lon
+          in: query
+          description: Longitude
+          required: true
+          schema:
+            type: number
+            example: 3.1420714053307925
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CensusSection'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        default:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+  /price/initial:
+    get:
+      tags:
+        - price
+      summary: Gets initial price range
+      description: Calculates a price range for a given census section and surface
+      operationId: getInitialPriceRange
+      parameters:
+        - name: codsec
+          in: query
+          description: Census Section unique code
+          required: true
+          schema:
+            type: string
+            example: "0801906007"
+        - name: surface
+          in: query
+          description: Surface in square meters
+          required: true
+          schema:
+            type: number
+            example: 120
+        - name: debug
+          in: query
+          description: Tag to return the values used to make the calculations
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitialPrice'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        default:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+  /price/final:
+    get:
+      tags:
+        - price
+      summary: Gets final price range
+      description: Calculates a price range for a given census section and surface and also considering the characteristics of the property
+      operationId: getFinalPriceRange
+      parameters:
+        - name: codsec
+          in: query
+          description: Census Section unique code
+          required: true
+          schema:
+            type: string
+            example: "0801906007"
+        - name: surface
+          in: query
+          description: Surface in square meters
+          required: true
+          schema:
+            type: number
+            example: 120
+        - name: floor
+          in: query
+          description: Floor of the property
+          required: true
+          schema:
+            type: string
+            example: "baja"
+            enum: ["baja", "baja_patio", "1-2", "3-4", "5-6", "7+", "atico"]
+        - name: maintenance
+          in: query
+          description: State of the property
+          required: true
+          schema:
+            type: string
+            example: "good"
+            enum: ["perfect", "good", "regular", "bad"]
+        - name: constructionYear
+          in: query
+          description: Year of construction of the property
+          required: true
+          schema:
+            type: string
+            example: "2008-2019"
+            enum: ["2008-2019", "1979-2007", "1945-1978", "1918-1944", "-1918"]
+        - name: energyCertification
+          in: query
+          description: Energy certification of the property
+          required: true
+          schema:
+            type: string
+            example: "A"
+            enum: ["A", "B", "C", "D", "E", "F", "G"]
+        - name: elevator
+          in: query
+          description: Whether the property has an elevator or not
+          required: true
+          schema:
+            type: boolean
+        - name: parking
+          in: query
+          description: Whether the property has an elevator or not
+          required: true
+          schema:
+            type: boolean
+        - name: furnished
+          in: query
+          description: Whether the property has an elevator or not
+          required: true
+          schema:
+            type: boolean
+        - name: sharedAreas
+          in: query
+          description: Whether the property has shared areas like a garden, rooftop, etc
+          required: true
+          schema:
+            type: boolean
+        - name: pool
+          in: query
+          description: Whether the property has a swimming pool or not
+          required: true
+          schema:
+            type: boolean
+        - name: conciergeServices
+          in: query
+          description: Whether the property has a concierge or not
+          required: true
+          schema:
+            type: boolean
+        - name: specialViews
+          in: query
+          description: Whether the property has special views or not
+          required: true
+          schema:
+            type: boolean
+        - name: unit
+          in: query
+          description: To show the result in €/m²/month or €/month
+          schema:
+            type: string
+            enum: ["€/m²/month", "€/month"]
+            default: "€/month"
+        - name: corrected
+          in: query
+          description: When set to true, applies a correcting factor to the price range to adjust it to the result given by the SERPAVI form
+          schema:
+            type: boolean
+        - name: debug
+          in: query
+          description: Tag to return the values used to make the calculations
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinalPrice'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        default:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+components:
+  schemas:
+    CensusSection:
+      type: object
+      required: [section]
+      properties:
+        section:
+          type: object
+          required: [OBJECTID, CUSEC, CUMUN, CSEC, CDIS, CMUN, CPRO, CCA, CUDIS, NPRO, NCA, NMUN]
+          properties:
+            OBJECTID:
+              type: integer
+              description: Id
+              example: 1234
+            CUSEC:
+              type: string
+              description: Unique Census Section code
+              example: "0801906000"
+            CUMUN:
+              type: string
+              description: Unique Municipality code
+              example: "08019"
+            CSEC:
+              type: string
+              description: Census Section code
+              example: "000"
+            CDIS:
+              type: string
+              description: District code
+              example: "06"
+            CMUN:
+              type: string
+              description: Municipality code
+              example: "019"
+            CPRO:
+              type: string
+              description: Province code
+              example: "08"
+            CCA:
+              type: string
+              description: Comunidad Autonoma code
+              example: "09"
+            CUDIS:
+              type: string
+              description: Unique District code
+              example: "0801906"
+            NPRO:
+              type: string
+              description: Province name
+              example: Barcelona
+            NCA:
+              type: string
+              description: Comunidad Autonoma name
+              example: "09"
+            NMUN:
+              type: string
+              description: Municipality
+              example: Barcelona
+    InitialPrice:
+      type: object
+      required: [price]
+      properties:
+        price:
+          $ref: "#/components/schemas/PriceBase"
+        details:
+          $ref: "#/components/schemas/PriceDetailsBase"
+    FinalPrice:
+      type: object
+      required: [price]
+      properties:
+        price:
+          $ref: "#/components/schemas/PriceBase"
+        details:
+          $ref: "#/components/schemas/PriceDetailsExtended"
+    PriceBase:
+      type: object
+      required: [lowerValue, higherValue]
+      properties:
+        lowerValue:
+          type: number
+          description: Lower end range value (in €/m²/month)
+          example: 9.408454426167067
+        higherValue:
+          type: number
+          description: Higher end range value (in €/m²/month)
+          example: 15.85174639840237
+    PriceDetailsExtended:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PriceDetailsBase"
+      properties:
+        originalLowerValue:
+          type: number
+          description: Original lower value in €/m²/month (i.e. without the correction factor applied)
+          example: 9.1819707085763
+        originalHigherValue:
+          type: number
+          description: Original higher value in €/m²/month (i.e. without the correction factor applied)
+          example: 13.113825908932757
+        initialLowerValue:
+          type: number
+          description: Initial lower value in €/m²/month
+          example: 9.1819707085763
+        initialHigherValue:
+          type: number
+          description: Initial higher value in €/m²/month
+          example: 13.113825908932757
+        score:
+          type: number
+          description: The calculated score for the given property params
+          example: 32.19
+        p25:
+          type: number
+          description: Percentile 25 of the price rent distribution for the given census section
+          example: 10.782633928571428
+        p75:
+          type: number
+          description: Percentile 75 of the price rent distribution for the given census section
+          example: 17.568812417909747
+        smed:
+          type: number
+          description: Median surface for the given census section
+          example: 72.5
+    PriceDetailsBase:
+      type: object
+      properties:
+        logFactor:
+          type: number
+          description: Logaritmic factor calculated using Percentile 75 and Median surface
+          example: 0.6818437980090029
+        lowerBase:
+          type: number
+          description: Lower base calculated using Median surface and surface
+          example: 8.767246377321431
+        higherBase:
+          type: number
+          description: higher base calculated using Median surface and surface
+          example: 15.050543535034748
+    BadRequest:
+      type: object
+      properties:
+        status:
+          type: number
+          default: 400
+        message:
+          type: string
+          example: Missing required parameters.
+      required:
+        - status
+        - message
+    NotFound:
+      type: object
+      properties:
+        status:
+          type: number
+          default: 404
+        message:
+          type: string
+          example: Entity not found.
+      required:
+        - status
+        - message
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: number
+          default: 500
+        message:
+          type: string
+          example: Internal Server Error
+      required:
+        - status
+        - message
