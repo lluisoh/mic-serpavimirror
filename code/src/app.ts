@@ -7,7 +7,7 @@ import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
 
-const openapiSpec = YAML.load(path.resolve(__dirname, "../api/openapi.yml"));
+const openapiSpec = YAML.load(path.resolve(__dirname, "../../api/openapi.yml"));
 
 const app = express();
 

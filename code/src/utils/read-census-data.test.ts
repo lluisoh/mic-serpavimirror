@@ -28,7 +28,7 @@ describe("readCensusData", () => {
 
     expect(path.resolve).toHaveBeenCalledWith(
       __dirname,
-      "../../data/census-sections.geojson"
+      "../../../data/census-sections.geojson"
     );
     expect(fs.readFileSync).toHaveBeenCalledWith(mockFilePath, "utf-8");
     expect(result).toEqual(mockGeoJSON.features);

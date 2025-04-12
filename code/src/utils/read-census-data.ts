@@ -9,7 +9,7 @@ import { AppError } from "../errors";
 export const readCensusData = () => {
   const filePath = path.resolve(
     __dirname,
-    "../../data/census-sections.geojson"
+    "../../../data/census-sections.geojson"
   );
   const rawData = fs.readFileSync(filePath, "utf-8");
   const geojson = JSON.parse(rawData);

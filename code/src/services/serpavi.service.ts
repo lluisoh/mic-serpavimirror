@@ -3,7 +3,7 @@ import Database from "better-sqlite3";
 import { CODSEC_TABLE } from "../config/db";
 import { BadRequestError, NotFoundError } from "../errors";
 
-const dbPath = path.resolve(__dirname, "../..//data/serpavi.sqlite");
+const dbPath = path.resolve(__dirname, "../../../data/serpavi.sqlite");
 const db = new Database(dbPath);
 
 export type CodsecRow = {
