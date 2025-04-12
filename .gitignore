@@ -3,7 +3,10 @@ node_modules
 .env
 
 # Assets
-data
+seccionado_2011
+census-sections.geojson
+serpavi.xlsx
 
 # Reports
 coverage
+
