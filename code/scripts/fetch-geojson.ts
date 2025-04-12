@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 const FILE_URL = process.env.GEOJSON_URL!;
-const OUTPUT_PATH = path.resolve(__dirname, '../data/census-sections.geojson');
+const OUTPUT_PATH = path.resolve(__dirname, '../../data/census-sections.geojson');
 
 // Only run on Railway
 const isRunningOnRailway = process.env.RAILWAY_ENVIRONMENT_NAME !== undefined;
