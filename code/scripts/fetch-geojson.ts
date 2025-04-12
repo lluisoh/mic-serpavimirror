@@ -20,7 +20,13 @@ if (fs.existsSync(OUTPUT_PATH)) {
 
 console.log('⬇️ Downloading GeoJSON file from:', FILE_URL);
 
-axios.get(FILE_URL, { responseType: 'stream' })
+axios.get(FILE_URL, {
+  responseType: 'stream',
+  headers: {
+    'User-Agent': 'RailwayBot/1.0 (+https://railway.app)',
+    'Accept': 'application/octet-stream'
+  }
+})
   .then(response => {
     const writer = fs.createWriteStream(OUTPUT_PATH);
     response.data.pipe(writer);
