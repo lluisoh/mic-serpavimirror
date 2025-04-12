@@ -40,18 +40,14 @@ export const getFinalPrice = async (
     corrected,
     ...params
   } = req.query;
-  if (!codsec || !surface) {
-    res.status(400).json({ error: "Missing required query parameters." });
-  }
 
   try {
     const P = calculateScore(params);
-    const S = parseFloat(surface);
     const row = getCodsecData(codsec);
-    const { price, details } = calculateFinalPrice({ P, S, corrected, ...row });
+    const { price, details } = calculateFinalPrice({ P, surface, corrected, ...row });
     const perSqMt = unit === "€/m²/month";
-    const lowerValue = perSqMt ? price.lowerValue : price.lowerValue * S;
-    const higherValue = perSqMt ? price.higherValue : price.higherValue * S;
+    const lowerValue = perSqMt ? price.lowerValue : price.lowerValue * details.S;
+    const higherValue = perSqMt ? price.higherValue : price.higherValue * details.S;
 
     res.json({
       price: { lowerValue, higherValue },

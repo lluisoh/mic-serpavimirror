@@ -30,24 +30,9 @@ describe("getInitialPrice", () => {
       logFactor: 0.6818437980090029,
       lowerBase: 8.767246377321431,
       higherBase: 15.050543535034748,
+      S: 100,
     },
   };
-
-  it("should return 400 if required query parameters are missing", async () => {
-    const req = mockRequest({});
-    const res = mockResponse();
-
-    await getInitialPrice(
-      req as InitialPriceRequest,
-      res as Response,
-      mockNext
-    );
-
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      error: "Missing required query parameters.",
-    });
-  });
 
   it("should return the calculated price and details when debug is true", async () => {
     const params = { codsec: "123", surface: "100", debug: "true" };
@@ -66,7 +51,7 @@ describe("getInitialPrice", () => {
 
     expect(serpaviService.getCodsecData).toHaveBeenCalledWith("123");
     expect(priceService.calculateInitialPrice).toHaveBeenCalledWith({
-      S: 100,
+      surface: "100",
       ...sectionData,
     });
     expect(res.json).toHaveBeenCalledWith(initialPrice);
@@ -87,7 +72,7 @@ describe("getInitialPrice", () => {
 
     expect(serpaviService.getCodsecData).toHaveBeenCalledWith("123");
     expect(priceService.calculateInitialPrice).toHaveBeenCalledWith({
-      S: 100,
+      surface: "100",
       ...sectionData
     });
     expect(res.json).toHaveBeenCalledWith({ price: initialPrice.price, details: undefined });

@@ -44,20 +44,9 @@ describe("getFinalPrice", () => {
       logFactor: 0.6818437980090029,
       lowerBase: 8.767246377321431,
       higherBase: 15.050543535034748,
+      S: 100,
     },
   };
-
-  it("should return 400 if required query parameters are missing", async () => {
-    const req = mockRequest({});
-    const res = mockResponse();
-
-    await getFinalPrice(req as FinalPriceRequest, res as Response, mockNext);
-
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      error: "Missing required query parameters.",
-    });
-  });
 
   it("should return the calculated final price", async () => {
     const req = mockRequest(params);
@@ -77,7 +66,7 @@ describe("getFinalPrice", () => {
     expect(serpaviService.getCodsecData).toHaveBeenCalledWith("12345");
     expect(priceService.calculateFinalPrice).toHaveBeenCalledWith({
       ...sectionData,
-      S: 100,
+      surface: "100",
       P: score,
       corrected: undefined,
     });

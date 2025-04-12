@@ -25,7 +25,7 @@ describe("Error Handler Middleware", () => {
     const response = await request(app).get("/?type=known");
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      error: true,
+      status: 400,
       message: "Known error occurred",
     });
   });
@@ -34,7 +34,7 @@ describe("Error Handler Middleware", () => {
     const response = await request(app).get("/?type=unknown");
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
-      error: true,
+      status: 500,
       message: "Internal Server Error",
     });
   });

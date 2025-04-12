@@ -11,15 +11,11 @@ export type InitialPriceRequest = Request<{}, {}, {}, InitialPriceParams>;
 export const getInitialPrice = async (req: InitialPriceRequest, res: Response, next: NextFunction) => {
   const { codsec, surface, debug } = req.query;
 
-  if (!codsec || !surface) {
-    res.status(400).json({ error: "Missing required query parameters." });
-  }
-
   try {
     const row = getCodsecData(codsec);
-    const { price, details } = calculateInitialPrice({ S: parseFloat(surface), ...row });
+    const { price, details } = calculateInitialPrice({ surface, ...row });
 
-    res.json({ price, details: debug ? details : undefined });
+    res.json({ price, details: debug !== undefined ? details : undefined });
   } catch (error) {
     next(error);
   }

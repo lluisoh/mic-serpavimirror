@@ -104,7 +104,7 @@ describe("calculateScore", () => {
 describe("calculateInitialPrice", () => {
   it("returns the initial price range for the given parameters", () => {
     const params = {
-      S: 121,
+      surface: "121",
       smed: 73,
       p25: 10.8,
       p75: 17.6,
@@ -120,6 +120,7 @@ describe("calculateInitialPrice", () => {
         lowerBase: 8.829781919999999,
         higherBase: 15.152383856000007,
         logFactor: 0.6847063013017902,
+        S: 121,
       },
     });
   });
@@ -127,7 +128,7 @@ describe("calculateInitialPrice", () => {
 
 describe("calculateFinalPrice", () => {
   const params = {
-    S: 121,
+    surface: "121",
     smed: 73,
     p25: 10.8,
     p75: 17.6,
@@ -142,6 +143,7 @@ describe("calculateFinalPrice", () => {
     lowerBase: 8.829781919999999,
     higherBase: 15.152383856000007,
     logFactor: 0.6847063013017902,
+    S: 121,
   };
   it("returns the final price range for the given parameters", () => {
     const price = calculateFinalPrice(params);

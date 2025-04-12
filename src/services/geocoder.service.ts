@@ -1,5 +1,6 @@
 import axios from "axios";
-import { NotFoundError } from "../errors";
+import { BadRequestError, NotFoundError } from "../errors";
+import { AddressParams } from "../types/section.types";
 
 export interface Coordinates {
   lat: number;
@@ -8,10 +9,19 @@ export interface Coordinates {
 
 /**
  * Geocodes a full address using the Nominatim API (OpenStreetMap).
- * @param address The full address string.
+ * @param params Address query params.
  * @returns Coordinates object or null if not found.
  */
-export async function geocodeAddress(address: string): Promise<Coordinates> {
+export async function geocodeAddress(params: Partial<AddressParams>): Promise<Coordinates> {
+
+  const { street, number, postalCode, municipality, province } = params;
+
+  if (!street || !number || !postalCode || !municipality || !province) {
+    throw new BadRequestError("[Geocoder] Missing required query parameters.");
+  }
+
+  const address = `${street} ${number}, ${postalCode}, ${municipality}, ${province}, España`;
+
   const response = await axios.get(
     "https://nominatim.openstreetmap.org/search",
     {

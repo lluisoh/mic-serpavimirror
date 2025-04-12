@@ -43,7 +43,7 @@ export function calculateScore(params: ScoreParams) {
 }
 
 export type InitialRangeProps = CodsecRow & {
-  S: number;
+  surface?: string;
 }
 
 /**
@@ -54,7 +54,12 @@ export type InitialRangeProps = CodsecRow & {
  * @param params.p25 - 25th percentile price in €/m²/mes.
  * @param params.p75 - 75th percentile price in €/m²/mes.
  */
-export function calculateInitialPrice({ S, smed, p25, p75 }: InitialRangeProps) {
+export function calculateInitialPrice({ surface, smed, p25, p75 }: InitialRangeProps) {
+  if (!surface) {
+    throw new BadRequestError("Surface is required");
+  }
+
+  const S = parseFloat(surface);
   const logFactor = Math.log(((99 * (smed - 30)) / 120 * (p75 - 2.58) / 23.776) + 1) / Math.log(100);
 
   const lowerBase = (
@@ -80,6 +85,7 @@ export function calculateInitialPrice({ S, smed, p25, p75 }: InitialRangeProps) 
       logFactor,
       lowerBase,
       higherBase,
+      S,
     },
   };
 }
@@ -99,8 +105,8 @@ export type FinalRangeProps = InitialRangeProps & {
  * @param params.p75 - 75th percentile price in €/m²/mes.
  * @param params.P - The score of the property.
  */
-export function calculateFinalPrice({ S, smed, p25, p75, P, corrected }: FinalRangeProps) {
-  const { price: { lowerValue, higherValue }, details } = calculateInitialPrice({ S, smed, p25, p75 });
+export function calculateFinalPrice({ surface, smed, p25, p75, P, corrected }: FinalRangeProps) {
+  const { price: { lowerValue, higherValue }, details } = calculateInitialPrice({ surface, smed, p25, p75 });
   const adjustedScore = (P - 18.115) / 100.885;
   const percentileDifference = p75 - p25;
 
