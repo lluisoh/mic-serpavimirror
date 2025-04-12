@@ -9,7 +9,9 @@ let sectionsGeoJSON: Feature<Polygon>[] = [];
 
 function loadCensusData() {
   sectionsGeoJSON = readCensusData();
-  console.log(`✅ Loaded ${sectionsGeoJSON.length} census sections`);
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(`✅ Loaded ${sectionsGeoJSON.length} census sections`);
+  }
 }
 
 /**

@@ -9,13 +9,13 @@ const Database = require("better-sqlite3");
 const xlsx = require("xlsx");
 
 // Load Excel file
-const xlsxPath = path.resolve(__dirname, "../data/serpavi.xlsx");
+const xlsxPath = path.resolve(__dirname, "../../data/serpavi.xlsx");
 const workbook = xlsx.readFile(xlsxPath);
 const sheet = workbook.Sheets["Secciones censales"];
 const data = xlsx.utils.sheet_to_json(sheet);
 
 // Ensure the directory exists
-const dataDir = path.resolve(__dirname, "../data");
+const dataDir = path.resolve(__dirname, "../../data");
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }

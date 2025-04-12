@@ -54,7 +54,6 @@ export const getFinalPrice = async (
       details: debug !== undefined ? { ...details, score: P, ...row } : undefined,
     });
   } catch (error) {
-    console.error(error);
     next(error);
   }
 };
