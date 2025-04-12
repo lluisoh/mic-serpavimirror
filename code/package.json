@@ -1,8 +1,8 @@
 {
-  "name": "mic-serpavi",
+  "name": "mic-serpavimirror",
   "version": "1.0.0",
   "description": "Microservice that replicates SERPAVI price range calculator",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "test": "npm run test:base",
     "test:base": "cross-env NODE_ENV=test vitest run",
@@ -11,8 +11,8 @@
     "dev": "nodemon src/server.ts",
     "postinstall": "ts-node scripts/fetch-geojson.ts"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Lluís Pons",
+  "license": "CC BY-NC 4.0",
   "dependencies": {
     "@turf/turf": "^7.2.0",
     "axios": "^1.8.4",

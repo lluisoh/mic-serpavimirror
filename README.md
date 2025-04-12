@@ -83,4 +83,5 @@ Full OpenAPI documentation is available in [`api/openapi.yml`](../api/openapi.ym
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+This project is licensed under the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/).  
+You may use, modify, and share this project for non-commercial purposes, with attribution.
