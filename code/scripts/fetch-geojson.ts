@@ -1,26 +1,31 @@
-// scripts/fetch-geojson.ts
+import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import https from 'https';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const FILE_URL = process.env.GEOJSON_URL!;
 const OUTPUT_PATH = path.resolve(__dirname, '../../data/census-sections.geojson');
 
 console.log('⬇️ Downloading GeoJSON file from:', FILE_URL);
 
-https.get(FILE_URL, (res) => {
-  if (res.statusCode !== 200) {
-    console.error(`Failed to download: Status code ${res.statusCode}`);
-    return;
-  }
+axios({
+  method: 'get',
+  url: FILE_URL,
+  responseType: 'stream',
+})
+  .then((response) => {
+    const writer = fs.createWriteStream(OUTPUT_PATH);
+    response.data.pipe(writer);
 
-  const fileStream = fs.createWriteStream(OUTPUT_PATH);
-  res.pipe(fileStream);
-  fileStream.on('finish', () => {
-    fileStream.close();
-    console.log('✅ GeoJSON file downloaded and saved.');
+    writer.on('finish', () => {
+      console.log('✅ GeoJSON file downloaded and saved.');
+    });
+
+    writer.on('error', (err) => {
+      console.error('❌ File write error:', err.message);
+      process.exit(1);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Error downloading file:', err.message);
+    process.exit(1); // Fail Railway build on error
   });
-});
