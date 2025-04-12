@@ -4,6 +4,8 @@
   "description": "Microservice that replicates SERPAVI price range calculator",
   "main": "server.ts",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
     "test": "npm run test:base",
     "test:base": "cross-env NODE_ENV=test vitest run",
     "test:watch": "cross-env NODE_ENV=test vitest",
