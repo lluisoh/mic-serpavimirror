@@ -1,35 +1,23 @@
-import fs from 'fs';
-import path from 'path';
-import { point } from '@turf/turf';
-import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import { Coordinates } from './geocoder.service';
-import { Feature, Polygon } from 'geojson';
+import { point } from "@turf/turf";
+import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
+import { Coordinates } from "./geocoder.service";
+import { Feature, Polygon } from "geojson";
+import { NotFoundError } from "../errors";
+import { readCensusData } from "../utils/read-census-data";
 
 let sectionsGeoJSON: Feature<Polygon>[] = [];
 
-/**
- * Loads the census section GeoJSON into memory.
- * This is done once when the app starts.
- */
-function loadCensusSections() {
-  const filePath = path.resolve(__dirname, '../../data/census-sections.geojson');
-  const rawData = fs.readFileSync(filePath, 'utf-8');
-  const geojson = JSON.parse(rawData);
-
-  if (!geojson.features || !Array.isArray(geojson.features)) {
-    throw new Error('Invalid GeoJSON file.');
-  }
-
-  sectionsGeoJSON = geojson.features;
+function loadCensusData() {
+  sectionsGeoJSON = readCensusData();
   console.log(`✅ Loaded ${sectionsGeoJSON.length} census sections`);
 }
 
 /**
  * Finds the census section that contains the given coordinates.
  * @param coords A point in [lat, lon]
- * @returns The matching census section's properties or null.
+ * @returns The matching census section's properties.
  */
-export async function findCensusSection(coords: Coordinates): Promise<any | null> {
+export async function findCensusSection(coords: Coordinates) {
   const pt = point([coords.lon, coords.lat]);
 
   for (const feature of sectionsGeoJSON) {
@@ -38,8 +26,8 @@ export async function findCensusSection(coords: Coordinates): Promise<any | null
     }
   }
 
-  return null;
+  throw new NotFoundError("[CensusSection] No matching census section found.");
 }
 
 // Load census sections once at startup
-loadCensusSections();
+loadCensusData();

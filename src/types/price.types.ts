@@ -49,7 +49,7 @@ export type ScoreFactors = Record<keyof ScoreParams, number>;
 export type InitialPriceParams = {
   codsec: string;
   surface: string;
-  debug?: boolean;
+  debug?: string;
 };
 
 /**
@@ -57,7 +57,7 @@ export type InitialPriceParams = {
  */
 export type FinalPriceParams = InitialPriceParams & ScoreParams & {
   unit?: "€/month" | "€/m²/month";
-  corrected?: boolean;
+  corrected?: string;
 };
 
 

@@ -4,7 +4,9 @@
   "description": "Microservice that replicates SERPAVI price range calculator",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "dev": "nodemon src/server.ts"
   },
   "author": "",
@@ -26,8 +28,13 @@
     "@types/geojson": "^7946.0.16",
     "@types/node": "^22.14.0",
     "@types/sqlite3": "^3.1.11",
+    "@types/supertest": "^6.0.3",
+    "@vitest/coverage-v8": "^3.1.1",
     "nodemon": "^3.1.9",
+    "supertest": "^7.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
   }
 }

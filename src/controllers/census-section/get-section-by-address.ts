@@ -3,11 +3,13 @@ import { AddressParams } from "../../types/section.types";
 import { Coordinates, geocodeAddress } from "../../services/geocoder.service";
 import { findCensusSection } from "../../services/census-section.service";
 
+export type SectionByAddressRequest = Request<{}, {}, {}, AddressParams>;
+
 /**
  * Get the census section for a given address.
  */
 export const getSectionByAddress = async (
-  req: Request<{}, {}, {}, AddressParams>,
+  req: SectionByAddressRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -22,16 +24,8 @@ export const getSectionByAddress = async (
     const fullAddress = `${street} ${number}, ${postalCode}, ${municipality}, ${province}, España`;
     const coords = await geocodeAddress(fullAddress);
 
-    if (!coords) {
-      res.status(404).json({ error: "Address could not be geocoded." });
-    }
-
     // Step 2: Match coordinates with census section
     const section = await findCensusSection(coords as Coordinates);
-
-    if (!section) {
-      res.status(404).json({ error: "No matching census section found." });
-    }
 
     res.json({ section });
   } catch (error) {

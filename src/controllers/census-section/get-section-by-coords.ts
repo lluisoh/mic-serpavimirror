@@ -2,10 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { CoordinatesParams } from "../../types/section.types";
 import { findCensusSection } from "../../services/census-section.service";
 
+export type SectionByCoordsRequest = Request<{}, {}, {}, CoordinatesParams>;
+
 /**
  * Get the census section for a given set of coordinates.
  */
-export const getSectionByCoords = async (req: Request<{}, {}, {}, CoordinatesParams>, res: Response, next: NextFunction) => {
+export const getSectionByCoords = async (req: SectionByCoordsRequest, res: Response, next: NextFunction) => {
   const { lat, lon } = req.query;
 
   if (!lat || !lon) {

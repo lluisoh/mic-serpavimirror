@@ -3,10 +3,12 @@ import { InitialPriceParams } from "../../types/price.types";
 import { getCodsecData } from "../../services/serpavi.service";
 import { calculateInitialPrice } from "../../services/price.service";
 
+export type InitialPriceRequest = Request<{}, {}, {}, InitialPriceParams>;
+
 /**
  * Get the initial price for a given census section and surface area.
  */
-export const getInitialPrice = async (req: Request<{}, {}, {}, InitialPriceParams>, res: Response, next: NextFunction) => {
+export const getInitialPrice = async (req: InitialPriceRequest, res: Response, next: NextFunction) => {
   const { codsec, surface, debug } = req.query;
 
   if (!codsec || !surface) {

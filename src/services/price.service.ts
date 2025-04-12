@@ -1,4 +1,5 @@
 import { CORRECTION_FACTOR, DELTA_VALUE, GAMMA_VALUE, SCORE_FACTORS, SCORE_WEIGHTS } from "../config/calculations";
+import { BadRequestError } from "../errors";
 import { ScoreParams } from "../types/price.types";
 import { CodsecRow } from "./serpavi.service";
 
@@ -25,13 +26,13 @@ export function calculateScore(params: ScoreParams) {
     const value = params[_key];
     // Check if the parameter is defined
     if (value === undefined) {
-      throw new Error(`Missing value for param '${key}'`);
+      throw new BadRequestError(`Missing value for param '${key}'`);
     }
     const options = SCORE_WEIGHTS[_key] as Record<string, number>;
     const weight = options[String(value)]
     // Check if the parameter has a valid value
     if (weight === undefined) {
-      throw new Error(`Invalid value for param '${key}': '${params[_key]}' (possible values are ${Object.keys(SCORE_WEIGHTS[_key]).join(", ")})`);
+      throw new BadRequestError(`Invalid value for param '${key}': '${params[_key]}' (possible values are ${Object.keys(SCORE_WEIGHTS[_key]).join(", ")})`);
     }
     // Calculate the score for the current parameter and add it to the total score
     const factor = SCORE_FACTORS[_key];
@@ -86,7 +87,7 @@ export function calculateInitialPrice({ S, smed, p25, p75 }: InitialRangeProps) 
 
 export type FinalRangeProps = InitialRangeProps & {
   P: number;
-  corrected?: boolean
+  corrected?: string;
 }
 
 /**
@@ -98,7 +99,7 @@ export type FinalRangeProps = InitialRangeProps & {
  * @param params.p75 - 75th percentile price in €/m²/mes.
  * @param params.P - The score of the property.
  */
-export function calculateFinalPrice({ S, smed, p25, p75, P, corrected = true }: FinalRangeProps) {
+export function calculateFinalPrice({ S, smed, p25, p75, P, corrected }: FinalRangeProps) {
   const { price: { lowerValue, higherValue }, details } = calculateInitialPrice({ S, smed, p25, p75 });
   const adjustedScore = (P - 18.115) / 100.885;
   const percentileDifference = p75 - p25;
@@ -106,8 +107,9 @@ export function calculateFinalPrice({ S, smed, p25, p75, P, corrected = true }: 
   const finalLowerValue = lowerValue + percentileDifference * DELTA_VALUE * (adjustedScore - 0.260);
   const finalHigherValue = higherValue + percentileDifference * GAMMA_VALUE * (adjustedScore - (0.5 / GAMMA_VALUE));
 
-  const adjLowerValue = corrected ? finalLowerValue * CORRECTION_FACTOR : finalLowerValue;
-  const adjHigherValue = corrected ? finalHigherValue * CORRECTION_FACTOR : finalHigherValue;
+  const shouldCorrect = corrected !== undefined;
+  const adjLowerValue = shouldCorrect ? finalLowerValue * CORRECTION_FACTOR : finalLowerValue;
+  const adjHigherValue = shouldCorrect ? finalHigherValue * CORRECTION_FACTOR : finalHigherValue;
 
   return {
     price: {
